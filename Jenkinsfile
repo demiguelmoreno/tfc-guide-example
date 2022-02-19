@@ -44,5 +44,4 @@ node {
     stage('TF Plan Analysis') {
 		sh "checkov -f tfplan.json --bc-api-key ${bc-api-key} --output-bc-ids --repo-id ${repo-id}"
     }
-    }
 }
