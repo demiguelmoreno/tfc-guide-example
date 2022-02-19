@@ -19,7 +19,6 @@ node {
     //    timestamps()
     //    ansiColor('xterm')
     //}
-    agent any
     stages {
         stage('Clone Repository') {
 		steps {
