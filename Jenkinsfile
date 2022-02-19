@@ -1,4 +1,4 @@
-pipeline {
+node {
     //agent {
     //    docker {
     //        image 'bridgecrew/jenkins_bridgecrew_runner:latest'
