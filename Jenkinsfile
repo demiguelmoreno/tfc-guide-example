@@ -22,34 +22,37 @@ pipeline {
     agent any
     stages {
         stage('Clone Repository') {
-			steps {
-				checkout scm
-			}
+		steps {
+			checkout scm
+		}
         }
         
         stage('Terraform Init') {
-			steps {
-            	script {
-	              sh "terraform init"
-				}
-            }
+		steps {
+        	    	script {
+	        	      sh "terraform init"
+			}
+            	}
         }
         
         stage('Terraform Plan') {
-			steps {
-            	script {
-                	sh "terraform plan --out tfplan.binary"
-                	sh "terraform show -json tfplan.binary | jq '.' > tfplan.json"
-            	}
-			}
+		steps {
+        	    	script {
+				sh "export AWS_ACCESS_KEY_ID=${aws-access-key-id}"
+				sh "export AWS_SECRET_ACCESS_KEY=${aws-secret-access-key}"
+				sh "export AWS_SESSION_TOKEN=${aws-session-token}"
+                		sh "terraform plan --out tfplan.binary"
+                		sh "terraform show -json tfplan.binary | jq '.' > tfplan.json"
+            		}
+		}
         }
         
         stage('TF Plan Analysis') {
-			steps {
-            	script {
-                	sh "checkov -f tfplan.json --bc-api-key ${bc-api-key} --output-bc-ids --repo-id ${repo-id}"
-            	}
-			}
+		steps {
+        	    	script {
+                		sh "checkov -f tfplan.json --bc-api-key ${bc-api-key} --output-bc-ids --repo-id ${repo-id}"
+            		}
+		}
         }
     }
 }
