@@ -22,26 +22,34 @@ pipeline {
     
     stages {
         stage('Clone Repository') {
-            checkout scm
+			steps {
+				checkout scm
+			}
         }
         
         stage('Terraform Init') {
-            script {
+			steps {
+            	script {
 	              sh "terraform init"
+				}
             }
         }
         
         stage('Terraform Plan') {
-            script {
-                sh "terraform plan --out tfplan.binary"
-                sh "terraform show -json tfplan.binary | jq '.' > tfplan.json"
-            }
+			steps {
+            	script {
+                	sh "terraform plan --out tfplan.binary"
+                	sh "terraform show -json tfplan.binary | jq '.' > tfplan.json"
+            	}
+			}
         }
         
         stage('TF Plan Analysis') {
-            script {
-                sh "checkov -f tfplan.json --bc-api-key ${bc-api-key} --output-bc-ids --repo-id ${repo-id}"
-            }
+			steps {
+            	script {
+                	sh "checkov -f tfplan.json --bc-api-key ${bc-api-key} --output-bc-ids --repo-id ${repo-id}"
+            	}
+			}
         }
     }
 }
