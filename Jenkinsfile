@@ -8,7 +8,7 @@ node {
 	}
         
     stage('Terraform Plan') {
-		withAWS(credentials: 'aws-credentials', region: 'eu-central-1') {
+		withCredentials(credentials: 'aws-credentials', region: 'eu-central-1') {
  			sh '''
         		terraform plan --out tfplan.binary
         		terraform show -json tfplan.binary | jq '.' > tfplan.json
