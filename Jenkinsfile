@@ -8,8 +8,12 @@ node {
 	}
         
     stage('Terraform Plan') {
-        //sh 'terraform plan --out tfplan.binary'
-        //sh "terraform show -json tfplan.binary | jq '.' > tfplan.json"
+		withEnv(["AWS_SESSION_TOKEN=${aws_session_token}","AWS_ACCESS_KEY_ID=${aws_access_key_id}", "AWS_SECRET_ACCESS_KEY=${aws_secret_access_key}"]) {
+			sh '''
+        		terraform plan --out tfplan.binary
+        		terraform show -json tfplan.binary | jq '.' > tfplan.json
+			'''
+		}
     }
         
     //stage('TF Plan Analysis') {
