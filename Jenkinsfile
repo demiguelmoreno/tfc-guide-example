@@ -8,12 +8,15 @@ node {
 	}
         
     stage('Terraform Plan') {
-		withCredentials(credentials: 'aws-credentials', region: 'eu-central-1') {
- 			sh '''
-        		terraform plan --out tfplan.binary
-        		terraform show -json tfplan.binary | jq '.' > tfplan.json
-			'''
-		}
+		withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+    		credentialsId: "aws-credentials",
+    		accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+    		secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+	 			sh '''
+    	    		terraform plan --out tfplan.binary
+        			terraform show -json tfplan.binary | jq '.' > tfplan.json
+				'''
+			}
     }
         
     //stage('TF Plan Analysis') {
