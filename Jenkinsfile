@@ -7,11 +7,20 @@ node {
 		sh 'terraform init'
 	}
         
+	stage('Test AWS Credentials') {
+	    sh '''
+	        echo '[330803171396_AWSAdministratorAccess]' > .aws/credentials
+	        echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> .aws/credentials
+	        echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> .aws/credentials
+	        echo "aws_session_token=${AWS_SESSION_TOKEN}" >> .aws/credentials
+	    '''
+	}
+	
+	stage('AWS Configure') {
+		sh 'aws configure'
+	}
+	
     stage('Terraform Plan') {
-		withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-    		credentialsId: "aws-credentials",
-    		accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-    		secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
 	 			sh '''
     	    		terraform plan --out tfplan.binary
         			terraform show -json tfplan.binary | jq '.' > tfplan.json
