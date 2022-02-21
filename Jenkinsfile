@@ -25,8 +25,7 @@ node {
     	    		terraform plan --out tfplan.binary
         			terraform show -json tfplan.binary | jq '.' > tfplan.json
 				'''
-			}
-    }
+	}
         
     //stage('TF Plan Analysis') {
 	//	sh 'checkov -f tfplan.json --bc-api-key ${bc-api-key} --output-bc-ids --repo-id ${repo-id}'
